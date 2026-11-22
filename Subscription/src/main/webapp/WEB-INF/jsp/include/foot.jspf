@@ -1,0 +1,10 @@
+<%-- 공통 하단 (정적 include) --%>
+</main>
+
+<footer class="footer">
+	구독노트 · 정기구독관리 서비스 (JSP/Servlet MVC 실습 프로젝트)
+</footer>
+
+<script src="${ ctx }/js/app.js"></script>
+</body>
+</html>

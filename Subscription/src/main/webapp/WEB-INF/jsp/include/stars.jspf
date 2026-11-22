@@ -1,0 +1,7 @@
+<%-- 만족도 별점 (변수 sub 필요) - 목록·상세 공용 --%>
+<c:choose>
+	<c:when test="${ empty sub.rating }"><span class="stars-empty">별점 없음</span></c:when>
+	<c:otherwise>
+		<span class="stars" title="만족도 ${ sub.rating }점" aria-label="만족도 ${ sub.rating }점"><c:forEach var="star" begin="1" end="5"><span class="${ star le sub.rating ? 'on' : '' }">★</span></c:forEach></span>
+	</c:otherwise>
+</c:choose>

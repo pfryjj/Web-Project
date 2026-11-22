@@ -1,0 +1,14 @@
+<%-- 입력값 검증 오류(errors 목록) / 단일 오류 메시지(errorMsg) 출력 --%>
+<c:if test="${ not empty errors }">
+	<div class="alert alert-error" role="alert">
+		<strong>입력값을 확인해 주세요.</strong>
+		<ul>
+			<c:forEach var="err" items="${ errors }">
+				<li><c:out value="${ err }" /></li>
+			</c:forEach>
+		</ul>
+	</div>
+</c:if>
+<c:if test="${ not empty errorMsg }">
+	<div class="alert alert-error" role="alert"><c:out value="${ errorMsg }" /></div>
+</c:if>

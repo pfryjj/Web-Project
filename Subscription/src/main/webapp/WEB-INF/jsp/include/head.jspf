@@ -1,0 +1,59 @@
+<%--
+	공통 상단 (정적 include)
+	사용법 : 각 JSP 에서 taglib 선언 → c:set 으로 pageTitle(제목), menu(선택 메뉴) 지정
+	        → include 지시자로 이 파일(head.jspf)을 포함, 맨 끝에서 foot.jspf 포함
+--%>
+<c:set var="ctx" value="${ pageContext.request.contextPath }" />
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title><c:out value="${ pageTitle }" /> | 구독노트</title>
+<link rel="stylesheet" href="${ ctx }/css/style.css">
+</head>
+<body data-ctx="${ ctx }">
+<header class="topbar">
+	<div class="topbar-inner">
+		<a class="brand" href="${ ctx }/main.do"><span class="brand-mark">S</span>구독노트</a>
+		<nav class="nav">
+			<c:choose>
+				<c:when test="${ empty sessionScope.loginUser }">
+					<a href="${ ctx }/member/loginForm.do" class="${ menu eq 'login' ? 'active' : '' }">로그인</a>
+					<a href="${ ctx }/member/joinForm.do" class="${ menu eq 'join' ? 'active' : '' }">회원가입</a>
+				</c:when>
+				<c:when test="${ sessionScope.loginUser.admin }">
+					<a href="${ ctx }/admin/memberList.do" class="${ menu eq 'admin' ? 'active' : '' }">회원 관리</a>
+					<a href="${ ctx }/member/myPage.do" class="${ menu eq 'my' ? 'active' : '' }">내 정보</a>
+				</c:when>
+				<c:otherwise>
+					<a href="${ ctx }/sub/list.do" class="${ menu eq 'sub' ? 'active' : '' }">내 구독</a>
+					<a href="${ ctx }/sub/writeForm.do" class="${ menu eq 'write' ? 'active' : '' }">구독 등록</a>
+					<a href="${ ctx }/member/myPage.do" class="${ menu eq 'my' ? 'active' : '' }">마이페이지</a>
+				</c:otherwise>
+			</c:choose>
+
+			<c:if test="${ not empty sessionScope.loginUser }">
+				<span class="nav-user">
+					<c:out value="${ sessionScope.loginUser.name }" />님
+					<c:if test="${ sessionScope.loginUser.admin }">(관리자)</c:if>
+				</span>
+				<%-- 로그아웃 (COMMON-FUNC-01) : 상태를 바꾸는 요청이므로 POST + CSRF 토큰 --%>
+				<form action="${ ctx }/member/logout.do" method="post" class="inline">
+					<input type="hidden" name="_csrf" value="${ sessionScope.csrfToken }">
+					<button type="submit" class="btn btn-ghost btn-sm">로그아웃</button>
+				</form>
+			</c:if>
+		</nav>
+	</div>
+</header>
+
+<main class="container">
+<%-- 플래시 메시지 : redirect 전에 세션에 넣어둔 안내 문구를 한 번만 보여주고 삭제 --%>
+<c:if test="${ not empty sessionScope.flashMsg }">
+	<div class="flash flash-${ sessionScope.flashType }" role="status">
+		<c:out value="${ sessionScope.flashMsg }" />
+	</div>
+	<c:remove var="flashMsg" scope="session" />
+	<c:remove var="flashType" scope="session" />
+</c:if>

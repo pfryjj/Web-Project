@@ -1,0 +1,8 @@
+<%-- 다음 결제일 D-day 뱃지 (변수 sub 필요) - 목록·상세 공용 --%>
+<c:choose>
+	<c:when test="${ sub.status eq 'CANCELED' }"><span class="dday off">해지됨</span></c:when>
+	<c:when test="${ sub.daysLeft lt 0 }"><span class="dday overdue" title="결제일이 지났습니다. 결제 완료 처리를 해 주세요.">D+${ -sub.daysLeft }</span></c:when>
+	<c:when test="${ sub.daysLeft eq 0 }"><span class="dday today">D-Day</span></c:when>
+	<c:when test="${ sub.daysLeft le 3 }"><span class="dday soon">D-${ sub.daysLeft }</span></c:when>
+	<c:otherwise><span class="dday">D-${ sub.daysLeft }</span></c:otherwise>
+</c:choose>

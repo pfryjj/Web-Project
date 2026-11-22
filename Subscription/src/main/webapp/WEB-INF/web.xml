@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="https://jakarta.ee/xml/ns/jakartaee" xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee https://jakarta.ee/xml/ns/jakartaee/web-app_6_0.xsd" id="WebApp_ID" version="6.0">
+  <display-name>Subscription-MVC</display-name>
+
+  <!-- 요청/응답 한글 인코딩 (톰캣 기본 설정과 같지만 다른 서버에서도 동작하도록 명시) -->
+  <request-character-encoding>UTF-8</request-character-encoding>
+  <response-character-encoding>UTF-8</response-character-encoding>
+
+  <welcome-file-list>
+    <welcome-file>index.jsp</welcome-file>
+  </welcome-file-list>
+
+  <!--
+    필터 : web.xml 에 적힌 순서대로 실행된다. (어노테이션 @WebFilter 는 실행 순서가 보장되지 않음)
+      1) AuthFilter : 로그인/관리자 권한 검사 (Sec-001)
+      2) CsrfFilter : POST 요청의 CSRF 토큰 검사 (Sec-002)
+  -->
+  <filter>
+    <filter-name>AuthFilter</filter-name>
+    <filter-class>kr.ac.kopo.filter.AuthFilter</filter-class>
+  </filter>
+  <filter>
+    <filter-name>CsrfFilter</filter-name>
+    <filter-class>kr.ac.kopo.filter.CsrfFilter</filter-class>
+  </filter>
+  <filter-mapping>
+    <filter-name>AuthFilter</filter-name>
+    <url-pattern>*.do</url-pattern>
+  </filter-mapping>
+  <filter-mapping>
+    <filter-name>CsrfFilter</filter-name>
+    <url-pattern>*.do</url-pattern>
+  </filter-mapping>
+
+  <!-- 세션 : 30분 동안 요청이 없으면 만료, 세션ID 는 쿠키로만 전달(URL 에 ;jsessionid 노출 방지) -->
+  <session-config>
+    <session-timeout>30</session-timeout>
+    <cookie-config>
+      <http-only>true</http-only>
+    </cookie-config>
+    <tracking-mode>COOKIE</tracking-mode>
+  </session-config>
+
+  <!-- JSP 및 include 조각(.jspf)의 한글 인코딩 -->
+  <jsp-config>
+    <jsp-property-group>
+      <url-pattern>*.jsp</url-pattern>
+      <url-pattern>*.jspf</url-pattern>
+      <page-encoding>UTF-8</page-encoding>
+      <trim-directive-whitespaces>true</trim-directive-whitespaces>
+    </jsp-property-group>
+  </jsp-config>
+
+  <!-- 에러 페이지 -->
+  <error-page>
+    <error-code>403</error-code>
+    <location>/WEB-INF/jsp/error/error.jsp</location>
+  </error-page>
+  <error-page>
+    <error-code>404</error-code>
+    <location>/WEB-INF/jsp/error/error.jsp</location>
+  </error-page>
+  <error-page>
+    <error-code>405</error-code>
+    <location>/WEB-INF/jsp/error/error.jsp</location>
+  </error-page>
+  <error-page>
+    <error-code>500</error-code>
+    <location>/WEB-INF/jsp/error/error.jsp</location>
+  </error-page>
+  <error-page>
+    <exception-type>java.lang.Throwable</exception-type>
+    <location>/WEB-INF/jsp/error/error.jsp</location>
+  </error-page>
+</web-app>
